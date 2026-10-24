@@ -1,5 +1,18 @@
 # Implementation status — 2026-10-24
 
+## Remote Debian repository connection timeout — 2026-10-24
+
+Read both user-supplied build log attachments. The API build now fails at strict APT update with `Could not connect to deb.debian.org:443 ... connection timed out`; all three Debian suites fail before package installation. Addresses were returned, so this is not a reported DNS lookup failure, but their correctness is not established. Remote outbound routing/firewall/proxy/resolver behavior still needs host-versus-container comparison. Web npm ci was canceled after API failure; no independent npm error was established. These logs supersede the previous missing-preceding-output diagnostic limitation.
+
+Added an opt-in Linux-only compose.build-host.yaml that sets build.network=host for API/web, leaving runtime network namespaces, service ports and volumes unchanged. Documented read-only getent/curl and disposable-container probes, conditional use of the override, possible separate BuildKit entitlement constraints and the case where host networking cannot help because the host itself is blocked. No server daemon restart, global DNS change, fixed-IP pin, insecure TLS option or repository-signature bypass was performed or recommended.
+
+Executed verification:
+- Read the two pasted-text attachments and repository decisions/status/Dockerfile.
+- `docker compose -f compose.yaml -f compose.build-host.yaml config --format json` and baseline `docker compose config --format json`, parsed in PowerShell: both build network values are host; neither runtime network_mode is set; proxy published ports match the baseline. Environment/credential values were not printed.
+- `git diff --check`: passed, line-ending notices only.
+
+Remaining: run host and bridge/host-network probes on the affected Linux server and apply only the matching network remedy. No remote shell was available; remote connectivity, host-network build execution and successful remote startup are not claimed. Existing locally verified Dockerfile, backend verification and PostgreSQL limitations remain unchanged. This networking/configuration-only follow-up did not rerun business tests or modify application code/data.
+
 ## API Docker dependency build hardening — 2026-10-24
 
 Responded to the remote server's `Unable to locate package libpq-dev` during API build. The excerpt does not include preceding APT update output, so the exact remote DNS/mirror/proxy/repository failure is not established. libpq-dev exists in Debian Bookworm. Pinned the PHP base distribution to php:8.3-cli-bookworm, changed official Debian repository URLs to HTTPS, added three download retries and 30-second connection timeouts, required any failed index update to fail the build, and retained pdo_pgsql/bcmath/zip compilation. Disabled recommended packages and cleaned package indexes in the build layer. Repository signatures and TLS verification remain enabled. Deployment troubleshooting and clean-build logging instructions added to DEPLOYMENT.md. No Compose ports, application authorization, reservation logic or database data changed.

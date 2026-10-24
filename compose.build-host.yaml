@@ -1,0 +1,9 @@
+# Optional Linux-only build-network workaround. Runtime networks are unchanged.
+# Use only when the host can reach package repositories but Docker builds cannot.
+services:
+  api:
+    build:
+      network: host
+  web:
+    build:
+      network: host

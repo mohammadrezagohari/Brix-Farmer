@@ -1,7 +1,8 @@
 FROM php:8.3-cli-bookworm
+ARG DEBIAN_MIRROR=https://deb.debian.org
 # Do not continue with incomplete package indexes after a mirror/network failure.
 RUN set -eux; \
-    sed -i 's|http://deb.debian.org|https://deb.debian.org|g' /etc/apt/sources.list.d/debian.sources; \
+    sed -i "s|https\?://deb\.debian\.org|${DEBIAN_MIRROR}|g" /etc/apt/sources.list.d/debian.sources; \
     apt-get -o Acquire::Retries=3 \
         -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 \
         -o APT::Update::Error-Mode=any update; \
