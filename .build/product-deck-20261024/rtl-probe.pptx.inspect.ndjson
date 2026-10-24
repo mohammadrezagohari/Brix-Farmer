@@ -1,0 +1,13 @@
+{"kind":"deck","id":"pr/s7018m","name":"Deck"}
+{"kind":"layout","id":"ly/07ql8nyx","editable":false,"name":"Master","type":"master"}
+{"kind":"layout","id":"ly/xojmt4ru","editable":false,"name":"Title Slide","type":"title","placeholders":[{"name":"title","type":"title"},{"name":"subtitle","type":"subtitle"}]}
+{"kind":"layout","id":"ly/wbmt8bqp","editable":false,"name":"Section Header","type":"sectionHeader","placeholders":[{"name":"title","type":"title"}]}
+{"kind":"layout","id":"ly/rqtkvm1s","editable":false,"name":"Title and Body","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/0zu9cbeh","editable":false,"name":"Title and Two Column","type":"twoColTx","placeholders":[{"name":"title","type":"title"},{"name":"Left column","type":"body"},{"name":"Right column","type":"body"}]}
+{"kind":"layout","id":"ly/58vq9wny","editable":false,"name":"Title and One Column","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/e94rqp0n","editable":false,"name":"Blank","type":"blank"}
+{"kind":"slide","id":"sl/trfyev","slideIndex":0,"layout":{"id":"ly/e94rqp0n","name":"Blank"},"title":"از مزرعه تا فرصت تجاری","textShapes":3,"backgroundColor":"rgba(23,63,49,1)"}
+{"kind":"textbox","id":"sh/2xsji9sb","slideIndex":0,"position":{"left":80,"top":60,"width":1120,"height":150},"text":"از مزرعه تا فرصت تجاری","geometry":"rect","lineWidth":0,"style":{"fontSize":56,"typeface":"Tahoma","color":"#FFFFFF","alignment":"right"}}
+{"kind":"textbox","id":"sh/p032tob2","slideIndex":0,"position":{"left":80,"top":250,"width":1120,"height":150},"text":"‏از مزرعه تا فرصت تجاری","geometry":"rect","lineWidth":0,"style":{"fontSize":56,"typeface":"Tahoma","color":"#FFFFFF","alignment":"right"}}
+{"kind":"textbox","id":"sh/4zalkjah","slideIndex":0,"position":{"left":80,"top":440,"width":1120,"height":150},"text":"‫از مزرعه تا فرصت تجاری‬","geometry":"rect","lineWidth":0,"style":{"fontSize":56,"typeface":"Tahoma","color":"#FFFFFF","alignment":"right"}}
+{"kind":"notes","id":"nt/trfyev","slideIndex":0,"text":""}

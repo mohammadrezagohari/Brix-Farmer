@@ -1,0 +1,11 @@
+{"kind":"deck","id":"pr/gcuwtl","name":"Deck"}
+{"kind":"layout","id":"ly/7ud0vyhs","editable":false,"name":"Master","type":"master"}
+{"kind":"layout","id":"ly/872lojyd","editable":false,"name":"Title Slide","type":"title","placeholders":[{"name":"title","type":"title"},{"name":"subtitle","type":"subtitle"}]}
+{"kind":"layout","id":"ly/i1w7ql8r","editable":false,"name":"Section Header","type":"sectionHeader","placeholders":[{"name":"title","type":"title"}]}
+{"kind":"layout","id":"ly/2twrypgj","editable":false,"name":"Title and Body","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/ozilcvih","editable":false,"name":"Title and Two Column","type":"twoColTx","placeholders":[{"name":"title","type":"title"},{"name":"Left column","type":"body"},{"name":"Right column","type":"body"}]}
+{"kind":"layout","id":"ly/yh8bqp8v","editable":false,"name":"Title and One Column","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/of61o7eh","editable":false,"name":"Blank","type":"blank"}
+{"kind":"slide","id":"sl/tf3bpd","slideIndex":0,"layout":{"id":"ly/of61o7eh","name":"Blank"},"title":"از مزرعه تا فرصت تجاری","textShapes":1,"backgroundColor":"rgba(23,63,49,1)"}
+{"kind":"textbox","id":"sh/ba90r690","slideIndex":0,"position":{"left":100,"top":150,"width":1080,"height":300},"text":"از مزرعه تا فرصت تجاری\nپلتفرم کشاورزی و تجارت","geometry":"rect","lineWidth":0,"style":{"fontSize":62,"typeface":"Tahoma","color":"#FFFFFF","alignment":"right"}}
+{"kind":"notes","id":"nt/tf3bpd","slideIndex":0,"text":""}
