@@ -1,5 +1,9 @@
 # Implementation status — 2026-10-24
 
+## Root hydration warning fix
+
+Added React's correctly cased suppressHydrationWarning prop only to the root html element to tolerate extension-injected attributes such as data-lt-installed. Descendant hydration checks remain enabled. Production build/TypeScript passed. Refreshed the Docker frontend and verified in Chrome with both reported attributes injected before hydration: no hydration console errors. No changes to authentication, theme storage or locale state.
+
 ## Dashboard redesign milestone — latest
 
 Delivered dedicated `/admin`, `/farmer`, `/trader` routes with permission-aware sidebar, collapse/mobile dialog navigation, breadcrumbs, global/list search, organization switching, profile menu, activity link, retained theme/language controls and self-hosted Vazirmatn. Shared cards/tables/badges/pagination/confirmation modals/toasts/skeletons and responsive green/neutral design system. Dashboard charts and counts use persisted data; no fabricated orders/revenue metrics.
