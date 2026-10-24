@@ -4,7 +4,7 @@ const password=process.env.E2E_PASSWORD;
 test.skip(!password,'E2E_PASSWORD required; provision synthetic QA accounts with DashboardQaSeeder.');
 async function login(page:Page,role:string){
  if(sessions.has(role)){await page.context().addCookies(sessions.get(role)!);await page.goto('/'+role);return;}
- await page.goto('/');await page.getByLabel('ایمیل',{exact:true}).fill(`${role}-dashboard-qa@example.test`);await page.getByLabel('رمز عبور',{exact:true}).fill(password!);await page.getByRole('button',{name:'ورود',exact:true}).click();await expect(page).toHaveURL(new RegExp('/'+role+'$'));sessions.set(role,await page.context().cookies());
+ await page.goto('/auth');await page.getByLabel('ایمیل',{exact:true}).fill(`${role}-dashboard-qa@example.test`);await page.getByLabel('رمز عبور',{exact:true}).fill(password!);await page.getByRole('button',{name:'ورود',exact:true}).click();await expect(page).toHaveURL(new RegExp('/'+role+'$'));sessions.set(role,await page.context().cookies());
 }
 for(const role of ['admin','farmer','trader'])test(`${role}: responsive shell, theme, language and navigation`,async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await login(page,role);await expect(page.locator('.kpi-grid')).toBeVisible();

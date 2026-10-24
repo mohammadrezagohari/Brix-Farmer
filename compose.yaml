@@ -19,7 +19,9 @@ services:
       interval: 15s
   web:
     build: {context: ., dockerfile: infra/web.Dockerfile}
-    environment: {API_ORIGIN: 'http://api:8000'}
+    environment:
+      API_ORIGIN: 'http://api:8000'
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
   proxy:
     image: nginx:alpine
     ports: ['8080:80']

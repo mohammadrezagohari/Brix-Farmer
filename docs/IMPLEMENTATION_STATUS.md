@@ -1,5 +1,36 @@
 # Implementation status — 2026-10-24
 
+## Public landing page — 2026-10-24
+
+Replaced the root entry with a responsive, prerendered marketing landing: forest-green/cream design, self-hosted Vazirmatn, locally stored generated agricultural hero image, distinct farmer/trader CTAs, feature introductions, keyboard-operated role tabs, illustrative capability preview, onboarding steps, native expandable FAQ, closing CTA, mobile navigation/Escape and retained language/theme preferences. No invented user/transaction statistics, testimonials, partners or implemented export/payment claims. Existing registration/session/organization onboarding moved to `/auth`; CTA role intent selects the organization type without granting KYB/admin privileges. Existing browser login tests now use `/auth`.
+
+SEO foundation: title/description, Open Graph/Twitter metadata, generated PNG social artwork, favicon, FAQ JSON-LD matching visible copy, one h1, image alt/responsive sizing/preload, robots and environment-driven sitemap/canonical. Authentication and role panels are noindex. `NEXT_PUBLIC_SITE_URL` is forwarded by Compose and documented in LANDING.md and DEPLOYMENT.md. No production domain was supplied, so sitemap is empty and canonical intentionally omitted until configured; build warns that social-image metadata uses a development origin. No ranking, indexing, analytics or Lighthouse score claimed. Persian and English landing copy are complete; other retained locales currently use English landing copy. Crawlable locale routes/hreflang and native review remain gaps.
+
+Verification executed:
+- `npm.cmd test` in apps/web: **4 passed** (existing dictionaries, decimal precision and error-localization tests).
+- `npm.cmd run typecheck`: passed during implementation. Final `npm.cmd run build`: passed including TypeScript and eight static routes. Final build regenerated next-env.d.ts back to its original non-dev paths. An intermediate browser rerun found duplicate index/noindex robots tags while navigating to auth; removed the unnecessary explicit index/follow root metadata (indexing is the default), rebuilt and reran the final browser suite successfully.
+- `$env:E2E_BASE_URL='http://localhost:8080'; npx.cmd playwright test e2e/landing.spec.ts e2e/errors.spec.ts`: final **3 passed** in Chrome. Covers image loading; 375/768/1024/1440 overflow assertions/screenshots; farmer/trader CTAs and keyboard tab navigation; FAQ; mobile menu/Escape; English/LTR and theme persistence; registration CTA/name field; SSR copy/metadata/JSON-LD; noindex auth; robots; social PNG; ten-language errors and browser validation. API requests were mocked where relevant; no business data was written. Full prior role-dashboard business suite was not rerun for this presentation-only change.
+- Desktop, mobile and English-dark screenshots in ignored apps/web/test-results/. Persian desktop/mobile visually inspected.
+- `git diff --check`: passed, line-ending notices only.
+- `$env:COMPOSE_BAKE='false'; docker compose up -d --build --no-deps web`: final frontend image rebuilt and local container recreated successfully. Initial BuildKit worker connection failure resolved on retry. No database migration or reseed.
+- Temporary owned host Next dev server on 3100 started for preview fallback, then stopped; existing local Compose frontend remains on 8080. Next dev generated apps/web/AGENTS.md; its bundled Next metadata/image guidance was read for the final implementation. Production build confirmed the new APIs; deprecated Image priority replaced with preload.
+
+Hero asset: apps/web/public/images/fields.png, created using built-in image_gen and copied into the repository. Exact prompt and provenance in LANDING.md. External-image curl/Node download attempts failed; delivered page depends on the local generated asset instead. Initial root-directory npm build invocation failed; subsequent commands ran in apps/web successfully. Existing backend/inventory/compliance gaps and missing source references remain unchanged; no new PostgreSQL concurrency claim.
+
+## Selected-language error messages — 2026-10-24
+
+Centralized displayed application errors in ten explicit locale dictionaries. Home/login, workspace/modals and product wizard retain structured errors until rendering, so an existing error updates when the user changes language. Known supplier, credentials, membership, legal-profile, stock, minimum-quantity and account-suspension messages are translated; other workflow conflicts use a localized state-conflict message. HTTP authentication/session, access, missing-record, throttling, validation and unknown/network failures have localized fallbacks. Raw server exception text is not displayed. Browser constraint-validation messages also use the selected app language rather than the browser language. No authorization, KYB or inventory eligibility rules changed.
+
+Executed verification:
+- `npm.cmd test` in apps/web: 4 passed (complete ten-locale error coverage, structured HTTP failures, unknown/network fallback, retained-error language change, existing locale/decimal tests).
+- `npm.cmd run typecheck`: passed. `npm.cmd run build`: passed.
+- `git diff --check`: passed (line-ending notices only).
+- `docker compose up -d --build --no-deps web`: local frontend rebuilt and recreated successfully; default sandbox Docker access denied, elevated execution succeeded.
+- `curl.exe -s -o NUL -w '%{http_code}' http://localhost:8080`: 200.
+- `$env:E2E_BASE_URL='http://localhost:8080'; npx.cmd playwright test e2e/errors.spec.ts`: 1 passed in Chrome; mocked supplier rejection persisted and changed across all ten locales; native required-field validation followed each locale. First run found an ambiguous alert selector matching Next's route announcer; selector fixed and rerun passed. No live business records changed by this test.
+
+Remaining limits: API wire messages remain English; localization is performed at the user-facing display boundary. Server field-validation details currently use a common translated validation message, and several workflow conflicts use a common translated conflict message. Detailed per-rule/per-field translations and native-speaker review remain future work. This change makes no new PostgreSQL concurrency claims. Initial shell attempts with python (unavailable) and npm.ps1 (execution policy) failed; successful implementation used apply_patch/PowerShell and npm.cmd.
+
 ## Root hydration warning fix
 
 Added React's correctly cased suppressHydrationWarning prop only to the root html element to tolerate extension-injected attributes such as data-lt-installed. Descendant hydration checks remain enabled. Production build/TypeScript passed. Refreshed the Docker frontend and verified in Chrome with both reported attributes injected before hydration: no hydration console errors. No changes to authentication, theme storage or locale state.

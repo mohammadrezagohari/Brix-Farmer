@@ -1,3 +1,4 @@
+import {RequestError} from './errors';
 import {Locale} from './i18n';
 const en = {
  dashboard:'Overview', farmer:'Farmer workspace', trader:'Trader workspace', admin:'Platform administration', products:'My products', newProduct:'Add product', inventory:'Inventory & harvests', incoming:'Incoming requests', marketplace:'Marketplace', reservations:'My reservations', customers:'Export customers', opportunities:'Sales pipeline', profile:'Organization profile', users:'Users', organizations:'Organizations & KYB', listings:'Listing moderation', categories:'Product categories', audits:'Audit trail', search:'Search', collapse:'Collapse navigation', menu:'Open navigation', close:'Close', home:'Home', workspace:'Workspace', activity:'Recent activity', future:'Next capabilities', futureText:'Contracts, negotiated quotations, export orders, compliance, secure documents, disputes and messaging are still in development. A reservation is a temporary hold and does not transfer ownership.',
@@ -14,8 +15,8 @@ export function dashboardCopy(locale:Locale):Copy {return {...en,...(locale==='f
 export async function request(path:string,method='GET',body?:unknown,org?:string,extra:Record<string,string>={}) {
  const headers:Record<string,string>={Accept:'application/json','Content-Type':'application/json',...extra};
  if(org)headers['X-Organization-ID']=org;
- if(method!=='GET'){const r=await fetch('/api/v1/csrf',{credentials:'include'});if(!r.ok)throw Error('API unavailable');headers['X-CSRF-TOKEN']=(await r.json()).token;}
+ if(method!=='GET'){const r=await fetch('/api/v1/csrf',{credentials:'include'});if(!r.ok)throw new RequestError(r.status,{});headers['X-CSRF-TOKEN']=(await r.json()).token;}
  const r=await fetch('/api/v1/'+path,{method,headers,body:body?JSON.stringify(body):undefined,credentials:'include'});
- if(r.status===204)return null;const data=await r.json();
- if(!r.ok)throw Object.assign(new Error(Object.values(data.errors||{}).flat().join(' ')||data.message||'Request failed'),{status:r.status});return data;
+ if(r.status===204)return null;const data=await r.json().catch(()=>({}));
+ if(!r.ok)throw new RequestError(r.status,data);return data;
 }

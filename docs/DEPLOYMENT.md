@@ -1,5 +1,7 @@
 # Deployment
 
+Public landing: `/`; authentication and registration: `/auth`. Set `NEXT_PUBLIC_SITE_URL` to the real public HTTPS origin before a production frontend build to populate canonical, sitemap and absolute social-image URLs. Root Compose forwards this setting from `.env`. Domain setup, indexing and production release are not part of the local landing change; see LANDING.md.
+
 Dashboard updates: after rebuilding API/web, run `docker compose exec api php artisan migrate --force`. Never run the test suite against the development database: use a separately created disposable PostgreSQL database and override DB_DATABASE in a one-off test container. The development servers and Docker Desktop engine were executable during the dashboard milestone; previous environment blockers below are historical.
 
 New panel URLs: `/admin`, `/farmer`, `/trader`. Create accounts with `php artisan access:create <email> --admin`, `--farmer` or `--trader`. Existing supplier owner memberships retain access to farmer and trader workspaces. New modules do not change existing organization memberships or credentials.

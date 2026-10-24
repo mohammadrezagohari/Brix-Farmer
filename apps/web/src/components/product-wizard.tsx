@@ -1,4 +1,5 @@
 'use client';
+import {localizeError} from '../lib/errors';
 import {FormEvent,useState} from 'react';
 import {Check,ChevronLeft,ChevronRight,Save,Send,Sprout} from 'lucide-react';
 import {dashboardCopy,request} from '../lib/dashboard';
@@ -6,7 +7,7 @@ import {Dictionary,Locale} from '../lib/i18n';
 import {Card} from './ui';
 export type Listing = {id:number;title:string;status:string;inventory_lot_id:number|null;product_category_id?:number;details:Record<string,string>};
 export default function ProductWizard({org,locale,t,categories,initial,onSaved}:{org:string;locale:Locale;t:Dictionary;categories:{id:number;name:string}[];initial?:Listing;onSaved:(id:number,submitted:boolean)=>void}){
- const c=dashboardCopy(locale);const [step,setStep]=useState(0),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ const c=dashboardCopy(locale);const [step,setStep]=useState(0),[busy,setBusy]=useState(false),[error,setError]=useState<unknown>(null);
  const [id,setId]=useState(initial?.id);
  const [title,setTitle]=useState(initial?.title||'');const [category,setCategory]=useState(String(initial?.product_category_id||''));
  const [values,setValues]=useState<Record<string,string>>({quantity:'',minimum:'',unit:'kg',grade:'',country:'IR',currency:'USD',...initial?.details});
@@ -16,12 +17,12 @@ export default function ProductWizard({org,locale,t,categories,initial,onSaved}:
  async function save(submit=false){
   setBusy(true);setError('');
   try{const result=await request(id?`listings/${id}`:'listings',id?'PUT':'POST',{title,product_category_id:category||null,details:values},org);setId(result.data.id);if(submit)await request(`listings/${result.data.id}/transition`,'POST',{action:'submit'},org);onSaved(result.data.id,submit);}
-  catch(e){setError(e instanceof Error?e.message:t.failure);}finally{setBusy(false);}
+  catch(e){setError(e);}finally{setBusy(false);}
  }
  function next(e:FormEvent){e.preventDefault();setStep(s=>Math.min(4,s+1));}
  return <Card className="wizard"><ol className="stepper">{steps.map((label,index)=><li key={label} className={index===step?'current':index<step?'complete':''}><button type="button" onClick={()=>setStep(index)} aria-current={index===step?'step':undefined}><span>{index<step?<Check size={15}/>:new Intl.NumberFormat(locale).format(index+1)}</span><b>{label}</b></button></li>)}</ol>
   <div className="wizard-body"><div className="section-heading"><div><span className="eyebrow">{steps[step]}</span><h2>{step===4?c.check:c.newProduct}</h2></div><Sprout className="muted"/></div>
-   <p className="helper">{c.draftHint}</p>{error&&<div className="alert error" role="alert">{error}</div>}
+   <p className="helper">{c.draftHint}</p>{!!error&&<div className="alert error" role="alert">{localizeError(error,locale)}</div>}
    <form onSubmit={next}>
     {step===0&&<><label>{t.product}<input required maxLength={160} value={title} onChange={e=>setTitle(e.target.value)}/></label><div className="form-grid"><label>{c.category}<select value={category} onChange={e=>setCategory(e.target.value)}><option value="">{c.choose}</option>{categories.map(item=><option value={item.id} key={item.id}>{item.name}</option>)}</select></label>{field('variety',c.variety)}</div><label>{c.description}<textarea value={values.description||''} onChange={e=>update('description',e.target.value)} rows={4}/></label></>}
     {step===1&&<><div className="form-grid">{field('quantity',c.quantity,true)}<label>{c.unit}<select value={values.unit} disabled={locked} onChange={e=>update('unit',e.target.value)}><option value="kg">{c.kg}</option><option value="tonne">{c.tonne}</option></select></label>{field('minimum',c.minimum,true)}{field('grade',c.grade,true)}{field('harvest_date',c.harvest,false,'date')}</div></>}

@@ -1,0 +1,18 @@
+
+name: Qwen Local Coder
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Qwen Local Coder
+    provider: ollama
+    model: qwen2.5-coder:3b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 4096
+      maxTokens: 1024
+      temperature: 0.2
