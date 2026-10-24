@@ -1,4 +1,44 @@
 import {test,expect} from '@playwright/test';
+import {landingDictionaries} from '../src/lib/landing-copy';
+import {languages,type Locale} from '../src/lib/i18n';
+
+test('all landing locales: native content, direction, FAQ schema, mobile navigation and persistence',async({page})=>{
+ test.setTimeout(90000);
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/');
+ for(const locale of Object.keys(languages) as Locale[]) {
+  const c=landingDictionaries[locale];
+  await page.locator('.lp-language select').selectOption(locale);
+  await expect(page.locator('html')).toHaveAttribute('lang',locale);
+  await expect(page.locator('html')).toHaveAttribute('dir',languages[locale].dir);
+  await expect(page.locator('h1')).toHaveText(c.title+c.accent);
+  await expect(page.locator('.lp-lead')).toHaveText(c.description);
+  await expect(page.locator('.lp-hero-actions a').first()).toHaveText(c.primary);
+  await expect(page.locator('.lp-logo small').first()).toHaveText(c.brandTagline);
+  await expect(page.locator('.lp-field-photo')).toHaveAttribute('alt',c.photo);
+  const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').textContent()||'{}');
+  expect(schema.mainEntity[2].name).toBe(c.questions[2]);
+  expect(schema.mainEntity[2].acceptedAnswer.text).toBe(c.answers[2]);
+  await page.getByRole('tab',{name:c.trader,exact:true}).click();
+  await expect(page.getByRole('tabpanel')).toContainText(c.traderBody);
+  for(const width of [375,1024,1440]) {
+   await page.setViewportSize({width,height:950});
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),locale).toBe(true);
+   for(const selector of ['.lp-header-actions','.lp-hero-actions','.lp-role-tabs','.lp-final .lp-button']) {
+    const bounds=await page.locator(selector).boundingBox();
+    expect(bounds&&bounds.x>=0&&bounds.x+bounds.width<=width+1,`${locale} ${width} ${selector}`).toBe(true);
+   }
+  }
+  await page.setViewportSize({width:375,height:950});
+  await page.getByRole('button',{name:c.menu,exact:true}).click();
+  await expect(page.locator('#landing-mobile-nav')).toContainText(c.how);
+  await page.keyboard.press('Escape');
+  await page.screenshot({path:`test-results/landing-${locale}-mobile.png`,fullPage:true});
+ }
+ await page.reload();
+ await expect(page.locator('h1')).toHaveText(landingDictionaries.zu.title+landingDictionaries.zu.accent);
+ expect(errors).toEqual([]);
+});
 
 test('landing: responsive layout, image, FAQ, role tabs, language and theme',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));

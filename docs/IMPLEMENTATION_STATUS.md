@@ -1,5 +1,19 @@
 # Implementation status — 2026-10-24
 
+## All permitted landing languages — 2026-10-24
+
+Delivered complete explicit landing dictionaries for fa/en/pt/ru/zh/hi/ar/am/id/zu, selected through Record<Locale, LandingCopy> with no English fallback. All sections, CTA labels, farmer/trader panels, FAQ answers, footer, image alt/accessibility labels and formerly hardcoded decorative slogans follow the chosen locale. Names AgriTrade/BRICS remain proper brand names. FAQ JSON-LD uses the displayed translated questions/answers. Decorative indices now use Intl.NumberFormat. Existing language persistence and Persian/Arabic RTL remain intact. Adjusted the floating supplier note and compact slogan typography to accommodate longer translations. No business permissions, quantities, inventory behavior or backend endpoints changed.
+
+Executed verification:
+- `npm.cmd test` in apps/web: **5 passed**, including a new test covering all permitted locales, identical key sets, nonempty strings, equal array lengths, FAQ pairing and detection of English fallback values.
+- `npm.cmd run typecheck`: passed during implementation. Final `npm.cmd run build`: passed including TypeScript and eight static routes. Existing missing-production-domain metadataBase warning remains.
+- `$env:COMPOSE_BAKE='false'; docker compose up -d --build --no-deps web`: local frontend rebuilt and recreated successfully.
+- `$env:E2E_BASE_URL='http://localhost:8080'; npx.cmd playwright test e2e/landing.spec.ts e2e/errors.spec.ts`: final **4 passed** in Chrome. New test cycles all ten languages, checks native content/CTA/brand slogan/image alt/role descriptions, html lang/dir, translated FAQ schema, mobile menu, persistence and 375/1024/1440 viewport/action bounds. Existing landing flows and all-language errors also passed. No live business data written. Intermediate experimental client-side title translation raced Next's streamed server metadata; removed that unrelated head mutation and retained existing server metadata before the successful final rerun.
+- Screenshots for every locale saved in ignored apps/web/test-results/landing-<locale>-mobile.png. Arabic and Amharic mobile screenshots visually inspected; glyphs rendered and layout remained intact.
+- `git diff --check`: passed, line-ending notices only.
+
+Remaining: native-speaker editorial review, separately crawlable locale URLs/hreflang, localized server metadata/social artwork and production domain configuration. Default server HTML/metadata remain Persian; language selection is browser-persisted. This section supersedes the earlier two-language landing limitation. Backend suite not rerun for this copy/UI-only change; no new PostgreSQL concurrency claim. Original missing reference documents remain unavailable and unreviewed as recorded in DECISIONS.md.
+
 ## Public landing page — 2026-10-24
 
 Replaced the root entry with a responsive, prerendered marketing landing: forest-green/cream design, self-hosted Vazirmatn, locally stored generated agricultural hero image, distinct farmer/trader CTAs, feature introductions, keyboard-operated role tabs, illustrative capability preview, onboarding steps, native expandable FAQ, closing CTA, mobile navigation/Escape and retained language/theme preferences. No invented user/transaction statistics, testimonials, partners or implemented export/payment claims. Existing registration/session/organization onboarding moved to `/auth`; CTA role intent selects the organization type without granting KYB/admin privileges. Existing browser login tests now use `/auth`.
