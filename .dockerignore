@@ -1,0 +1,13 @@
+**/node_modules
+**/vendor
+**/.next
+**/.env
+**/*.sqlite
+.git
+**/test-results
+**/playwright-report
+**/*.tsbuildinfo
+**/storage/logs/*.log
+**/storage/framework/sessions/*
+**/storage/framework/views/*.php
+**/storage/app/private/*

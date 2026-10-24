@@ -1,0 +1,13 @@
+/apps/api/vendor/
+/apps/api/.env
+/apps/api/database/*.sqlite*
+/apps/web/node_modules/
+/apps/web/.next/
+/apps/web/.env.local
+/.env
+*.log
+*.tsbuildinfo
+/apps/web/test-results/
+/apps/web/playwright-report/
+/test-results/
+/playwright-report/

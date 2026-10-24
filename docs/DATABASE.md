@@ -1,0 +1,11 @@
+# Database
+
+Dashboard migration adds user suspension, organization legal profile/review reason, product_categories, listings (draft/review/published/rejected/paused), audit_logs, organization-private trade_partners and opportunities. Original inventory tables remain intact. Listed stocks are initialized at submission only, once under a listing lock; drafts do not affect inventory. All submitted quantity changes are rejected, so existing reservations/allocations cannot be bypassed through product edits. Profile submission resets KYB and hides public listings until renewed review.
+
+Reservation HTTP eligibility is rechecked inside the inventory transaction under listing and organization locks. The published listing, unsuspended verified seller and buyer membership are prerequisites. PostgreSQL independent-process contention has now been tested in an isolated database. Audit insertions and operational review/suspension mutations share transactions. Raw audit rows have no update/delete endpoint; database-enforced append-only grants remain pending.
+
+Implemented: users, sessions, password_reset_tokens, cache/jobs, organizations, organization_memberships, inventory_lots, reservations, stock_movements, outbox_events. Foreign keys prohibit deleting referenced commercial records. Membership uniqueness prevents duplicate roles. Reservation idempotency is unique per buyer organization.
+
+Quantities: DECIMAL(18,3), kg. Application arithmetic uses BCMath strings. PostgreSQL check constraints reject nonpositive reservations, invalid lot quantities and excessive allocation. Availability subtracts allocated stock and unexpired active reservations under the lot row lock. Existing idempotency requests return the original reservation; different inputs conflict. Release is repeatable and writes only once. Expired reservations are excluded from availability immediately and released by a scheduled job.
+
+Movements are append-only at the application layer; database-level immutability and least-privilege runtime grants remain pending. Outbox storage is implemented; a reliable delivery worker is pending. Lot creation currently records opening stock without proof review; do not treat these records as verified ownership.

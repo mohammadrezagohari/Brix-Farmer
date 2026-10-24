@@ -1,0 +1,11 @@
+# Decisions
+
+2026-10-24 extension: Ten representative interface languages (fa, en, pt, ru, zh, hi, ar, am, id, zu) cover the principal language needs of member countries; not all regional/official languages are claimed. Country scope reference: https://brics.br/en/about-the-brics. A typed, complete dictionary per locale replaces inline bilingual conditions; quantities retain decimal-string precision during locale formatting. Browser-stored preferences control explicit light/dark or OS theme.
+
+Platform administrators have an explicit, non-mass-assignable user flag with Gates on read-only admin endpoints. Organization trader membership remains tenant-scoped; admin is not a tenant authorization bypass. New self-owned organizations may be created with trader membership without granting KYB approval. Interactive access:create provisions new accounts only; it never overwrites existing credentials or exposes a public admin-grant endpoint. Existing organizations and memberships retain their previous behavior.
+
+2026-10-24: Repository inspection found an empty workspace. The required files 01_BRICS_AgriTrade_PRD_FA.docx, 02_BRICS_AgriTrade_Workflow_Technical_FA.docx, 03_BRICS_AgriTrade_ERD.mmd, 04_BRICS_AgriTrade_Order_Workflow.mmd, 05_BRICS_AgriTrade_Sequence.mmd, 06_BRICS_AgriTrade_OpenAPI_MVP.yaml, README_FA.md and PDF alternatives are unavailable. They have NOT been reviewed. The attached master brief is the provisional specification. No P0 completeness claim is possible until the PRD is supplied and reconciled.
+
+Use Laravel 13 (PHP 8.3 compatible), Next.js App Router, PostgreSQL and a modular monolith. Local SQLite tests exercise application behavior only, never PostgreSQL locking guarantees. Docker Desktop is installed but its Linux daemon is unavailable; host PHP lacks pdo_pgsql. PostgreSQL integration execution is therefore blocked until Docker is running.
+
+Initial deliverable prioritizes persisted identity, organization boundaries and inventory reservations. Missing modules remain explicit in IMPLEMENTATION_STATUS.md. Inventory uses decimal strings with BCMath, kilograms, three decimal places. Reservation expiry is checked under the lot lock, and scheduler cleanup acquires that same lock. No acquisition or export approvals are inferred.
