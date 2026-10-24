@@ -1,5 +1,19 @@
 # Implementation status — 2026-10-24
 
+## Configurable Debian mirror after successful Arvan host probes — 2026-10-24
+
+User supplied successful host GET results showing PGP signed-message headers for Arvan's Bookworm, Bookworm updates and Bookworm security InRelease paths, alongside a host timeout to deb.debian.org. Host reachability is now established for those mirror paths; cryptographic signature validity, release freshness, dependency downloads and build-network reachability remain for APT to verify. Host-network build workaround does not solve the reported host timeout to the original repository.
+
+Added DEBIAN_MIRROR build argument (default https://deb.debian.org), forwarded from root Compose environment and documented in .env.example. Substitution supports original HTTP or HTTPS source URLs and preserves /debian, /debian-security, suites, components and Debian Signed-By configuration. No authentication/signature/TLS checks were disabled. Root .env can select https://mirror.arvancloud.ir for future builds; no existing .env or server config was overwritten. Deployment guide documents both persistent Compose configuration and one-build argument use. No runtime networks, ports, volumes or application logic changed.
+
+Executed verification:
+- Parsed `docker compose config --format json` for default and process-local DEBIAN_MIRROR override: correct default and Arvan argument values; credentials not printed.
+- `docker compose --progress plain build api`: succeeded locally with the default mirror, including package indexes, package install, PHP extensions, Composer and package discovery. Existing containers were not recreated.
+- Initial inline shell rewrite probe failed due to Windows native quoting; it did not modify repository configuration. Replaced with `.build/arvan-mirror-probe.sh` mounted read-only into a disposable `brix-farmer-api` container: both Arvan URIs, both Bookworm suites and both Debian Signed-By fields verified, exit 0. Container automatically removed.
+- `git diff --check`: passed, line-ending notices only.
+
+Remaining: apply the mirror configuration to the remote Dockerfile and rerun its build, which must verify mirror signatures/release validity and download packages inside the build network. Local default-mirror build success is not a claim of remote Arvan build success. Composer/npm repository connectivity is independent. Business tests were not repeated for the repository-selection-only change; earlier 20-pass SQLite image verification and PostgreSQL concurrency limitations still apply. Original missing source reference documents remain unreviewed.
+
 ## Remote Debian repository connection timeout — 2026-10-24
 
 Read both user-supplied build log attachments. The API build now fails at strict APT update with `Could not connect to deb.debian.org:443 ... connection timed out`; all three Debian suites fail before package installation. Addresses were returned, so this is not a reported DNS lookup failure, but their correctness is not established. Remote outbound routing/firewall/proxy/resolver behavior still needs host-versus-container comparison. Web npm ci was canceled after API failure; no independent npm error was established. These logs supersede the previous missing-preceding-output diagnostic limitation.
