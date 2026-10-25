@@ -1,5 +1,12 @@
 # Implementation status — 2026-10-24
 
+## GitHub publication verification — 2026-10-25
+
+User narrowed scope to repository publication only; no live hosting requested. GitHub connector verified public repository mohammadrezagohari/Brix-Farmer and main commit 135887db98f9e5ba4572d03f08838d6156680fb0, identical to local HEAD. Working tree was clean. Tracked environment files are examples only; local .env and SQLite databases are not tracked. This is a tracked-path check, not a complete historical secret audit.
+
+Executed: read docs/DECISIONS.md and this status; git status --short --branch; git log -3 --oneline; git rev-parse HEAD; git ls-files environment/database/key/storage patterns; GitHub get_profile/get_repo/fetch_commit(main). Git is installed at C:/Program Files/Git/cmd/git.exe but absent from shell PATH. git ls-remote and git push origin main failed because this sandbox could not read the SSH private key; no source push was needed because remote HEAD already matched. No app tests needed for verification/documentation only. No deployment or PostgreSQL concurrency verification performed. Remaining: online execution requires separate PHP/Node/PostgreSQL hosting; GitHub Pages cannot execute the PHP backend. Missing original source references remain unreviewed.
+
+
 ## MinIO console host-port reference audit — 2026-10-24
 
 Inspected the user-updated Compose mapping: host 19001 forwards to MinIO console 9001, command remains `server /data --console-address :9001`, volume target remains /data. Searched source/configuration for MinIO/9000/9001/AWS endpoint references, excluding dependencies/build/deck/browser artifacts: no application console-port reference required changing. Laravel retains generic env-driven S3 configuration and defaults to the local disk; private storage integration remains a future module. Updated the stale deployment documentation console URL from localhost:9001 to localhost:19001 and distinguished the console mapping from the internal S3 API at minio:9000. No credentials, application configuration, API endpoint, volume, or Compose runtime service was modified by this audit.
