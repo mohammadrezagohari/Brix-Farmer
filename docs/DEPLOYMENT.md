@@ -39,7 +39,7 @@ docker compose exec api php artisan migrate --force
 docker compose exec api php artisan db:seed
 ```
 
-Open http://localhost:8080. Mailpit: http://localhost:8025. MinIO console: http://localhost:9001. Storage and mail services exist but document storage and notification workflows are not yet integrated. Containers use development servers and are not a production deployment.
+Open http://localhost:8080. Mailpit: http://localhost:8025. MinIO console: http://localhost:19001 (host 19001 maps to container console port 9001). Keep `--console-address :9001`; only the published host port changed to avoid the existing server's MinIO. The S3 API inside the Compose network remains `http://minio:9000`; the console port is not an S3 endpoint. No application URL, credentials or data-volume changes are needed for this console-only port mapping. Storage and mail services exist but document storage and notification workflows are not yet integrated. Containers use development servers and are not a production deployment.
 
 Queue: `docker compose exec api php artisan queue:work`. Scheduler: `docker compose exec api php artisan schedule:work`. These are manual development workers, not supervised services yet. Keep them running for queue and reservation expiry housekeeping.
 

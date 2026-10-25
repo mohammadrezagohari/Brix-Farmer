@@ -1,5 +1,11 @@
 # Implementation status — 2026-10-24
 
+## MinIO console host-port reference audit — 2026-10-24
+
+Inspected the user-updated Compose mapping: host 19001 forwards to MinIO console 9001, command remains `server /data --console-address :9001`, volume target remains /data. Searched source/configuration for MinIO/9000/9001/AWS endpoint references, excluding dependencies/build/deck/browser artifacts: no application console-port reference required changing. Laravel retains generic env-driven S3 configuration and defaults to the local disk; private storage integration remains a future module. Updated the stale deployment documentation console URL from localhost:9001 to localhost:19001 and distinguished the console mapping from the internal S3 API at minio:9000. No credentials, application configuration, API endpoint, volume, or Compose runtime service was modified by this audit.
+
+Executed: repository decision/status reads and rg source-reference audit; `docker compose config --format json` parsed without printing secrets confirmed host 19001, target 9001, console command and /data volume target; `git diff --check` passed with line-ending notice only. No image build, service recreation, business tests or remote execution were needed/performed for this documentation-only update. Remaining: apply the already-selected mapping on the remote project with `docker compose up -d --no-deps minio` if its running container has not yet been recreated; remote access and port availability are not verified here. Existing storage integration and PostgreSQL concurrency limitations remain unchanged.
+
 ## Configurable Debian mirror after successful Arvan host probes — 2026-10-24
 
 User supplied successful host GET results showing PGP signed-message headers for Arvan's Bookworm, Bookworm updates and Bookworm security InRelease paths, alongside a host timeout to deb.debian.org. Host reachability is now established for those mirror paths; cryptographic signature validity, release freshness, dependency downloads and build-network reachability remain for APT to verify. Host-network build workaround does not solve the reported host timeout to the original repository.
