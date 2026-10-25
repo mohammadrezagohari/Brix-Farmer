@@ -196,3 +196,5 @@ Phase 5: admin queues/audits, shipments/evidence, off-platform payment review, d
 ## Next executable step
 
 Start Docker Desktop Linux engine. Fill root .env credentials and API APP_KEY per DEPLOYMENT.md, run `docker compose up --build -d`, then `docker compose exec api php artisan migrate --force`. Resolve container execution issues and run PostgreSQL integration tests with separate concurrent database sessions before progressing beyond the inventory milestone. Independent next code task: extract controllers/policies/resources, finish identity recovery/verification and implement KYB plus listing moderation so reservations can be exposed through authorized marketplace discovery. Reconcile absent reference documents before committing final business transitions.
+
+Publication follow-up (2026-10-25): approved execution outside the sandbox successfully committed this verification report (4c07fc2) and pushed main to origin. SSH worked in approved execution; no user-side SSH repair is required for this completed publication. git diff --check passed before commit (line-ending warning only).
